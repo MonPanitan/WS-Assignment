@@ -1,4 +1,7 @@
 import unittest, requests
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+import io
 
 #
 class getAllProductsTestCase(unittest.TestCase):
@@ -71,7 +74,47 @@ class convertTestCase(unittest.TestCase):
         #Asserting the response status code
         self.assertEqual(response.status_code, 200)
 
+#generate a pdf file of test results
+class PDFTestResult(unittest.TextTestResult):
+    def addSuccess(self, test):
+        super().addSuccess(test)
+        self.stream.write(f"Test {test} passed\n")
 
+    def addFailure(self, test, err):
+        super().addFailure(test, err)
+        self.stream.write(f"Test {test} failed\n")
+
+    def addError(self, test, err):
+        super().addError(test, err)
+        self.stream.write(f"Test {test} encountered an error\n")
+
+# Custom Test Runner to Generate PDF
+def run_tests_and_generate_pdf():
+    stream = io.StringIO()
+    runner = unittest.TextTestRunner(stream=stream, verbosity=2)
+    suite = unittest.defaultTestLoader.loadTestsFromModule(__import__(__name__))
+    result = runner.run(suite)
+    
+    test_output = stream.getvalue()
+    
+    # Generate PDF report
+    pdf_filename = "WS-UnitTest.pdf"
+    pdf = canvas.Canvas(pdf_filename, pagesize=letter)
+    pdf.setFont("Helvetica", 12)
+    pdf.drawString(100, 750, "Panitan Sripoom B00148508 - Web Services Assignment")
+    pdf.drawString(150, 730, "Unit Test for APIs Endpoints")
+    
+    y_position = 700
+    for line in test_output.split("\n"):
+        if y_position < 50:  # Start new page if needed
+            pdf.showPage()
+            pdf.setFont("Helvetica", 12)
+            y_position = 750
+        pdf.drawString(50, y_position, line) # start to write the results from each test case
+        y_position -= 20
+
+    pdf.save()
+    print(f"Test results saved in {pdf_filename}")
 
 if __name__ == '__main__':
-    unittest.main()
+    run_tests_and_generate_pdf()
