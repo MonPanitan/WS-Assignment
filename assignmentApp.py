@@ -28,9 +28,9 @@ class Item(BaseModel):
     Price: float
     Quantity: int
     Description: str
-    letter: str #for startsWith function
-    prodIDStart: str #for paginate function
-    prodIDEnd: str #for paginate function
+    # letter: str #for startsWith function
+    # prodIDStart: str #for paginate function
+    # prodIDEnd: str #for paginate function
 
 #Landing Page
 @app.get("/")
@@ -39,9 +39,9 @@ def read_root():
 
 
 #Pass a single ID number to get a single product
-@app.get("/getSingleProduct/{id}")
-def get_single_product(id):
-    return json.loads(dumps(collection.find_one({'Product ID': id})))
+@app.get("/getSingleProduct")
+def get_single_product(prodID: str):
+    return json.loads(dumps(collection.find_one({'Product ID': prodID})))
 
 
 #Get All Products
@@ -51,34 +51,34 @@ def get_all_products():
 
 
 #Add new Product to the DB
-@app.get("/addNewProduct/{prodID},{name},{price},{quantity},{description}")
-def add_new_product(prodID, name, price, quantity, description):
-    collection.insert_one({'Product ID': prodID, 'Name': name, 'Unit Price': price, 'Stock Quantity': quantity, 'Description': description})
+@app.post("/addNewProduct")
+def add_new_product(product: Item):
+    collection.insert_one({'Product ID': product.ProductID, 'Name':product.Name, 'Unit Price': product.Price, 'Stock Quantity': product.Quantity, 'Description': product.Description})
     return {"message": "Product added successfully"}
 
 
 #Delete Product from the DB
-@app.get("/deleteProduct/{id}")
-def delete_product(id):
-    collection.delete_one({'Product ID': id})
+@app.get("/deleteProduct")
+def delete_product(prodID: str):
+    collection.delete_one({'Product ID': prodID})
     return({"message": "Product deleted successfully"})
 
 
 #Get the Product that starts with a specific string/character
-@app.get("/startsWith/{letter}")
-def starts_with(letter):
+@app.get("/startsWith")
+def starts_with(letter: str):
     return json.loads(dumps(collection.find({'Name': {'$regex': '^' + letter}})))
     
 
 #get the product in range of two product IDs(inclusive)
-@app.get("/paginate/{prodIDStart},{prodIDEnd}")
-def paginate(prodIDStart, prodIDEnd):
-    return json.loads(dumps(collection.find({'Product ID': {'$gte': prodIDStart, '$lte': prodIDEnd}})))
+@app.get("/paginate")
+def paginate(prodStartID: str, prodEndID: str):
+    return json.loads(dumps(collection.find({'Product ID': {'$gte': prodStartID, '$lte': prodEndID}})))
 
 
 #convertfrom USD to EUR
-@app.get("/convert/{id}")
-def convert(id):
+@app.get("/convert")
+def convert(prodID:str):
     #get the exchange rate
     usdExchangeRate = f"https://v6.exchangerate-api.com/v6/{API_KEY}/latest/USD"
     response = requests.get(usdExchangeRate)
@@ -88,7 +88,7 @@ def convert(id):
     euroConvertionRate = data.get('conversion_rates').get('EUR')
 
     #get the product from DB
-    product = collection.find_one({'Product ID': id})
+    product = collection.find_one({'Product ID': prodID})
     
     #get the USD Unit Price attribute from product object
     usdCurr = product.get('Unit Price')
