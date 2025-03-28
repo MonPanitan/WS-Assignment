@@ -5,6 +5,11 @@ from pydantic import BaseModel
 from pymongo import MongoClient
 from bson.json_util import dumps
 from bson.objectid import ObjectId
+from dotenv import load_dotenv
+
+load_dotenv()
+
+import os
 
 import base64
 
@@ -12,6 +17,9 @@ app = FastAPI()
 client = MongoClient('mongodb://root:example@localhost:27017/')
 db = client.autoStock
 collection = db.itemList
+
+API_KEY = os.getenv("CurrencyAPI")
+print(API_KEY)
 
 #pydantic model for the Item
 class Item(BaseModel):
@@ -72,7 +80,7 @@ def paginate(prodIDStart, prodIDEnd):
 @app.get("/convert/{id}")
 def convert(id):
     #get the exchange rate
-    usdExchangeRate = "https://v6.exchangerate-api.com/v6/b24565b0b69ce9c1c12cdb7b/latest/USD"
+    usdExchangeRate = f"https://v6.exchangerate-api.com/v6/{API_KEY}/latest/USD"
     response = requests.get(usdExchangeRate)
     data = response.json()
     

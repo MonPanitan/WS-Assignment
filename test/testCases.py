@@ -26,7 +26,7 @@ class getProductByIDTestCase(unittest.TestCase):
 
 class addNewProductTestCase(unittest.TestCase):
     def test_enpointAddNewProduct(self):
-        url = 'http://localhost:5000/addNewProduct/AUTO)11,Test Product,10.99,100,This is a test product'
+        url = 'http://localhost:5000/addNewProduct/AUTO011,Test Product,10.99,100,This is a test product'
 
         #Making a GET request to the API endpoint
         response = requests.get(url)
