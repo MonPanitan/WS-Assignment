@@ -1,9 +1,10 @@
+#Testing the API endpoints using unittest and requests library
+
 import unittest, requests
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import io
 
-#
 class getAllProductsTestCase(unittest.TestCase):
     def test_enpointAllProduct(self):
         url = 'http://localhost:5000/getAllProducts'
@@ -16,7 +17,7 @@ class getAllProductsTestCase(unittest.TestCase):
 
 class getProductByIDTestCase(unittest.TestCase):
     def test_enpointGetSingleProduct(self):
-        url = 'http://localhost:5000/getSingleProduct/AUTO001'
+        url = 'http://localhost:5000/getSingleProduct?prodID=AUTO001'
 
         #Making a GET request to the API endpoint
         response = requests.get(url)
@@ -26,7 +27,7 @@ class getProductByIDTestCase(unittest.TestCase):
 
 class addNewProductTestCase(unittest.TestCase):
     def test_enpointAddNewProduct(self):
-        url = 'http://localhost:5000/addNewProduct/AUTO011,Test Product,10.99,100,This is a test product'
+        url = 'http://localhost:5000/addNewProduct?prodID=AUTO050&name=TestProduct&price=99.99&quantity=40&description=TESTUNITTESTING'
 
         #Making a GET request to the API endpoint
         response = requests.get(url)
@@ -36,7 +37,7 @@ class addNewProductTestCase(unittest.TestCase):
 
 class deleteProductTestCase(unittest.TestCase):
     def test_enpointDeleteProduct(self):
-        url = 'http://localhost:5000/deleteProduct/AUTO002'
+        url = 'http://localhost:5000/deleteProduct?prodID=AUTO002'
 
         #Making a GET request to the API endpoint
         response = requests.get(url)
@@ -46,7 +47,7 @@ class deleteProductTestCase(unittest.TestCase):
 
 class startsWithTestCase(unittest.TestCase):
     def test_enpointStartsWith(self):
-        url = 'http://localhost:5000/startsWith/T'
+        url = 'http://localhost:5000/startsWith?letter=T'
 
         #Making a GET request to the API endpoint
         response = requests.get(url)
@@ -56,7 +57,7 @@ class startsWithTestCase(unittest.TestCase):
 
 class paginateTestCase(unittest.TestCase):
     def test_enpointPaginate(self):
-        url = 'http://localhost:5000/paginate/1,10'
+        url = 'http://localhost:5000/paginate?prodStartID=AUTO001&prodEndID=AUTO010'
 
         #Making a GET request to the API endpoint
         response = requests.get(url)
@@ -66,7 +67,7 @@ class paginateTestCase(unittest.TestCase):
 
 class convertTestCase(unittest.TestCase):
     def test_enpointConvert(self):
-        url = 'http://localhost:5000/convert/AUTO007'
+        url = 'http://localhost:5000/convert?prodID=AUTO007'
 
         #Making a GET request to the API endpoint
         response = requests.get(url)
@@ -89,11 +90,11 @@ class PDFTestResult(unittest.TextTestResult):
         self.stream.write(f"Test {test} encountered an error\n")
 
 # Custom Test Runner to Generate PDF
-def run_tests_and_generate_pdf():
+def tests_and_generate_pdf():
     # Create a string stream to capture the test results
     stream = io.StringIO()
     # Create a custom test runner that uses the PDFTestResult class
-    runner = unittest.TextTestRunner(stream=stream, verbosity=2, resultclass=PDFTestResult)
+    runner = unittest.TextTestRunner(stream=stream, verbosity=2,)
     # Load all test cases from the current module
     suite = unittest.defaultTestLoader.loadTestsFromModule(__import__(__name__))
     result = runner.run(suite)
@@ -101,7 +102,7 @@ def run_tests_and_generate_pdf():
     test_output = stream.getvalue()
     
     # Generate PDF report
-    pdf_filename = "WS-UnitTest.pdf"
+    pdf_filename = "WS-UnitTest_Result.pdf"
     pdf = canvas.Canvas(pdf_filename, pagesize=letter)
     pdf.setFont("Helvetica", 12)
     pdf.drawString(100, 750, "Panitan Sripoom B00148508 - Web Services Assignment")
@@ -122,4 +123,4 @@ def run_tests_and_generate_pdf():
     print(f"Test results saved in {pdf_filename}")
 
 if __name__ == '__main__':
-    run_tests_and_generate_pdf()
+    tests_and_generate_pdf()

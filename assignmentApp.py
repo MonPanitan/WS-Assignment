@@ -51,9 +51,9 @@ def get_all_products():
 
 
 #Add new Product to the DB
-@app.post("/addNewProduct")
-def add_new_product(product: Item):
-    collection.insert_one({'Product ID': product.ProductID, 'Name':product.Name, 'Unit Price': product.Price, 'Stock Quantity': product.Quantity, 'Description': product.Description})
+@app.get("/addNewProduct")
+def add_new_product(prodID: str, name: str, price: float, quantity: int, description: str):
+    collection.insert_one({'Product ID': prodID, 'Name': name, 'Unit Price': price, 'Stock Quantity': quantity, 'Description': description})
     return {"message": "Product added successfully"}
 
 
