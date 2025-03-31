@@ -1,15 +1,17 @@
 #Testing the API endpoints using unittest and requests library
 
 import datetime
-import shutil
 import unittest, requests
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import io
 import subprocess
 import os
+import shutil
 from fastapi import HTTPException
 from fastapi.responses import FileResponse
+
+
 
 MONGO_URI = "mongodb://root:example@localhost:27017/autoStock?authSource=admin"
 DATABASE_NAME = "autoStock"
@@ -163,5 +165,5 @@ def dump_database():
     return FileResponse(zip_file, filename="database-${date}.zip", media_type="application/zip")
 
 if __name__ == '__main__':
-    # tests_and_generate_pdf()
+    tests_and_generate_pdf()
     dump_database()
