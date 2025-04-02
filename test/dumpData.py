@@ -14,6 +14,7 @@ def dump_database():
     timestamp = datetime.datetime.now().strftime("%d-%m-%Y_%H-%M")
     backup_dir = f"itemList_backup{timestamp}"
     zip_file = f"database_dump_{timestamp}"
+    mongodump_dir = "C:\Program Files\MongoDB\Tools\bin\mongodump.exe"
 
     # Ensure backup directory exists
     if not os.path.exists(backup_dir):
@@ -22,7 +23,7 @@ def dump_database():
     try:
         # Run mongodump
         result = subprocess.run(
-            ["mongodump", "--uri", MONGO_URI, "--collection",DATABASE_COLLECTION,"--out", backup_dir],
+            [mongodump_dir, "--uri", MONGO_URI, "--collection",DATABASE_COLLECTION,"--out", backup_dir],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
