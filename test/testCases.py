@@ -42,7 +42,7 @@ class addNewProductTestCase(unittest.TestCase):
         url = 'http://localhost:5000/addNewProduct?prodID=AUTO050&name=TestProduct&price=99.99&quantity=40&description=TESTUNITTESTING'
 
         #Making a GET request to the API endpoint
-        response = requests.get(url)
+        response = requests.post(url)
 
         #Asserting the response status code
         self.assertEqual(response.status_code, 200)
@@ -52,7 +52,7 @@ class deleteProductTestCase(unittest.TestCase):
         url = 'http://localhost:5000/deleteProduct?prodID=AUTO002'
 
         #Making a GET request to the API endpoint
-        response = requests.get(url)
+        response = requests.delete(url)
 
         #Asserting the response status code
         self.assertEqual(response.status_code, 200)

@@ -51,14 +51,14 @@ def get_all_products():
 
 
 #Add new Product to the DB
-@app.get("/addNewProduct")
+@app.post("/addNewProduct")
 def add_new_product(prodID: str, name: str, price: float, quantity: int, description: str):
     collection.insert_one({'Product ID': prodID, 'Name': name, 'Unit Price': price, 'Stock Quantity': quantity, 'Description': description})
     return {"message": "Product added successfully"}
 
 
 #Delete Product from the DB
-@app.get("/deleteProduct")
+@app.delete("/deleteProduct")
 def delete_product(prodID: str):
     collection.delete_one({'Product ID': prodID})
     return({"message": "Product deleted successfully"})

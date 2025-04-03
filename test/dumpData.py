@@ -13,7 +13,7 @@ DATABASE_COLLECTION = "itemList"
 def dump_database():
     timestamp = datetime.datetime.now().strftime("%d-%m-%Y_%H-%M")
     backup_dir = f"itemList_backup{timestamp}"
-    zip_file = f"database_dump_{timestamp}"
+    zip_file = f"database_dump_123{timestamp}"
     
 
     # Ensure backup directory exists

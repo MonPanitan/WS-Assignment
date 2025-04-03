@@ -25,7 +25,7 @@ if response.status_code == 200:
             f.write(f"Endpoint: {path}\n")
             for method, details in methods.items():
                 f.write(f"  Method: {method.upper()}\n")
-                if "parameters" in details:
+                if "parameters" in details: 
                     f.write("  Parameters:\n")
                     for param in details["parameters"]:
                         f.write(f"    - {param['name']} ({param['in']}): {param.get('description', 'No description')}\n")
@@ -35,4 +35,4 @@ if response.status_code == 200:
 
     print("README.txt generated successfully!")
 else:
-    print("Failed to fetch API documentation.")
+    print("failed")
